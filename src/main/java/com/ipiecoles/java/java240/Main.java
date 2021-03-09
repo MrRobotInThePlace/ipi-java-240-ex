@@ -1,12 +1,28 @@
 package com.ipiecoles.java.java240;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        ProduitManager pm = new ProduitManager();
+
+        ApplicationContext ctx =  new AnnotationConfigApplicationContext(SpringConfig.class);
+        BitcoinService bitcoinService = ctx.getBean("bitcoinServiceWithoutCache",BitcoinService.class);
+
+        ProduitManager produitManager = ctx.getBean(ProduitManager.class);
+
+        //WebPageManager webPageManager = new WebPageManager();
+        //pm.setWebPageManager(webPageManager);
+        //BitcoinService bitcoinService = new BitcoinService(); => remplacé par ApplicationContext
+        //bitcoinService.setWebPageManager(webPageManager);
+        //pm.setBitcoinService(bitcoinService); => Injection faite dans SpringConfig
+
 
         System.out.println("Bienvenue !");
         while(true){
@@ -18,25 +34,26 @@ public class Main {
             System.out.println("5 - Initialiser le catalogue");
             System.out.println("0 - Quitter");
 
+
             Scanner scanner = new Scanner(System.in);
             int saisie = scanner.nextInt();
             switch (saisie){
                 case 1:
-                    BitcoinService bitcoinService = new BitcoinService();
+                    //bitcoinService.setWebPageManager(webPageManager);
                     System.out.println("1 BTC = " + bitcoinService.getBitcoinRate() + " €");
                     break;
                 case 2:
-                    pm.ajouterProduit();
+                    produitManager.ajouterProduit();
                     break;
                 case 3:
-                    pm.afficherTousLesProduits();
+                    produitManager.afficherTousLesProduits();
                     break;
                 case 4:
                     System.out.println("Quel numéro de produit ?");
-                    pm.afficherDetailProduit(scanner.nextInt());
+                    produitManager.afficherDetailProduit(scanner.nextInt());
                     break;
                 case 5:
-                    pm.initialiserCatalogue();
+                    produitManager.initialiserCatalogue();
                     break;
                 case 0:
                     System.out.println("Au revoir !");
